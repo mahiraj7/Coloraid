@@ -11,18 +11,32 @@ const generateColorPalette = () => {
     const colors = Array.from({ length: 5 }, () => {
         return '#' + Math.floor(Math.random()*16777215).toString(16);
     });
-
+    let lockedColors = []; 
     colors.forEach((color) => {
         const colorDiv = document.createElement('div');
         colorDiv.style.backgroundColor = color;
-        colorDiv.innerHTML = color;
+        colorDiv.innerHTML = `
+            <div class="color-info">
+                <div class="color-code">${color}</div>
+                <div class="copy-icon"><img src="images/icons8-copy-24.png"</div>
+                <div class="lock-icon">${lockedColors.includes(color) ? '🔒' : '🔓'}</div>
+            </div>
+        `;
         colorDiv.classList.add('color', 'w-60', 'h-60', 'text-center', 'font-semibold');
-
-        colorDiv.addEventListener('click', () => {
+    
+        const copyIcon = colorDiv.querySelector('.copy-icon');
+        copyIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent click event from bubbling to colorDiv
             copyToClipboard(color);
             alert(`Color code "${color}" copied to clipboard!`);
         });
 
+
+    
+        colorDiv.addEventListener('click', () => {
+            // Handle colorDiv click event here if needed
+        });
+    
         colorPalette.appendChild(colorDiv);
     });
 
