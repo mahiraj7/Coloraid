@@ -30,8 +30,6 @@ const generateColorPalette = () => {
             copyToClipboard(color);
             alert(`Color code "${color}" copied to clipboard!`);
         });
-
-
     
         colorDiv.addEventListener('click', () => {
             // Handle colorDiv click event here if needed
