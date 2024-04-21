@@ -4,6 +4,13 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+document.addEventListener('keydown', (event) => {
+    if (event.key === ' ') {
+        event.preventDefault(); // Prevent the default action of spacebar
+        generateColorPalette();
+    }
+});
+
 const generateColorPalette = () => {
     const colorPalette = document.getElementById('color-palette');
     colorPalette.innerHTML = '';
