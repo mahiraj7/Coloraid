@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="copy-icon mt-2 flex justify-center"><img src="images/icons8-copy-24.png"></div>
                     <div class="lock-icon mt-2 flex justify-center">${lockedColors.includes(color) ? '🔒' : '🔓'}</div>
                 </div>
+
             `;
             colorDiv.classList.add('color', 'w-full', 'flex', 'py-80','h-100', 'text-lg', 'justify-center', 'font-semibold');
         
@@ -50,30 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.removeChild(textarea);
     }
 
-    function downloadImage() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = colorPalette.offsetWidth;
-        canvas.height = colorPalette.offsetHeight;
-
-        let x = 0;
-        colorPalette.querySelectorAll('.color').forEach((colorDiv) => {
-            ctx.fillStyle = colorDiv.style.backgroundColor;
-            ctx.fillRect(x, 0, colorDiv.offsetWidth, colorPalette.offsetHeight);
-            x += colorDiv.offsetWidth;
-        });
-
-        const dataURL = canvas.toDataURL('image/png');
-
-        const a = document.createElement('a');
-        a.href = dataURL;
-        a.download = 'color-palette.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
     // Event listener for spacebar key press to generate color palette
     document.addEventListener('keydown', (event) => {
         if (event.key === ' ') {
@@ -85,3 +62,57 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial color palette generation
     generateColorPalette();
 });
+
+
+document.getElementById('download').addEventListener('click', (e) => {
+    downloadImage();
+});
+
+function downloadImage() {
+    const colorPalette = document.getElementById('color-palette');
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = colorPalette.offsetWidth;
+    canvas.height = colorPalette.offsetHeight;
+
+    let x = 0;
+        colorPalette.querySelectorAll('.color').forEach((colorDiv) => {
+        const color = colorDiv.style.backgroundColor;
+        const colorCode = colorDiv.querySelector('.color-code').textContent; 
+
+        ctx.fillStyle = color;
+        ctx.fillRect(x, 0, colorDiv.offsetWidth, colorPalette.offsetHeight);
+
+        const centerX = x + colorDiv.offsetWidth / 2;
+
+
+        ctx.fillStyle = '#000000'; 
+        ctx.font = '24px Arial';
+        ctx.textAlign = 'center'; // Center the text horizontally
+        ctx.textBaseline = 'middle'; // Center the text vertically
+        ctx.fillText(colorCode, centerX, colorPalette.offsetHeight / 2); // Draw color code at the center of the color block
+
+        // Update x-coordinate for the next color block
+    x += colorDiv.offsetWidth;
+});
+
+
+    const dataURL = canvas.toDataURL('image/png');
+
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'color-palette.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+
+    // Color palette - 1 = ex: 100 -> panel 100/5 = 20
+    // color code - 5 = W 
+
+    // Start = 0, 20, 40, 60, 80
+    // Inner center position = (panel - colorCodeWidth)/2
+    // Absolute center position = Inner center position + Start
+}
+
