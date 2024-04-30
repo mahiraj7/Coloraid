@@ -1,3 +1,22 @@
+const lockArray = Array.from({ length: 5 }, () => {
+    return false;
+});
+
+let colors = []
+
+const randomColor = () =>{
+    return '#' + Math.floor(Math.random()*16777215).toString(16)
+}
+
+const generateColors = () => {
+    lockArray.forEach((isLocked, i) => {
+        if( !isLocked) {
+            colors[i] = randomColor();
+        }
+    })
+    return colors
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const downloadContainer = document.getElementById('downloadContainer');
     const colorPalette = document.getElementById('color-palette');
@@ -5,19 +24,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function generateColorPalette() {
         colorPalette.innerHTML = '';
 
-        const colors = Array.from({ length: 5 }, () => {
-            return '#' + Math.floor(Math.random()*16777215).toString(16);
-        });
+        const colors = generateColors();
 
-        let lockedColors = []; 
-        colors.forEach((color) => {
+        while (colors.length < 5) {
+            const newColor = generateRandomColor();
+            if (!colors.includes(newColor)) {
+                colors.push(newColor);
+            }
+        }
+
+        colors.forEach((color, index) => {
             const colorDiv = document.createElement('div');
             colorDiv.style.backgroundColor = color;
             colorDiv.innerHTML = `
                 <div class="color-info">
                     <div class="color-code">${color}</div>
-                    <div class="copy-icon mt-2 flex justify-center"><img src="images/icons8-copy-24.png"></div>
-                    <div class="lock-icon mt-2 flex justify-center">${lockedColors.includes(color) ? '🔒' : '🔓'}</div>
+                    <div class="copy-icon mt-14 flex justify-center"><img src="images/icons8-copy-24.png"></div>
+                    <div id="lock-${index}" class="lock-icon mt-2 flex justify-center">${lockArray[index] ? '<img class="h-6 w-6 mt-2" src="images/lock-closed.svg" alt="Locked">' : '<img class="h-6 w-6 mt-2" src="images/lock-open.svg" alt="Unlocked">'}</div>
                 </div>
 
             `;
@@ -29,8 +52,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 copyToClipboard(color);
                 alert(`Color code "${color}" copied to clipboard!`);
             });
+
+            function updateLockIcon(index) {
+                const lockDiv = document.getElementById(`lock-${index}`);
+                if (lockArray[index]) {
+                    lockDiv.innerHTML = `<img class="h-6 w-6 mt-2" src="images/lock-closed.svg" alt="Locked">`;
+                } else {
+                    lockDiv.innerHTML = `<img class="h-6 w-6 mt-2" src="images/lock-open.svg" alt="Unlocked">`;
+                }
+            }
         
             colorPalette.appendChild(colorDiv);
+            document.getElementById(`lock-${index}`).addEventListener('click' , (e) => {
+                lockArray[index] = !lockArray[index]
+                e.target.innerHTML = lockArray[index] ? '<img src="images/lock-closed.svg" alt="Locked">' : '<img src="images/lock-open.svg" alt="Unlocked">'
+                updateLockIcon(index);
+            });
         });
 
         // Create and append the download button
@@ -62,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial color palette generation
     generateColorPalette();
 });
-
 
 document.getElementById('download').addEventListener('click', (e) => {
     downloadImage();
@@ -115,4 +151,3 @@ function downloadImage() {
     // Inner center position = (panel - colorCodeWidth)/2
     // Absolute center position = Inner center position + Start
 }
-
