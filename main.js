@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             colorDiv.innerHTML = `
                 <div class="color-info">
                     <div class="color-code">${color}</div>
-                    <div class="copy-icon mt-14 flex justify-center"><img src="images/icons8-copy-24.png"></div>
+                    <div class="copy-icon flex justify-center mt-8 md:mt-4"><img src="images/icons8-copy-24.png"></div>
                     <div id="lock-${index}" class="lock-icon mt-2 flex justify-center">${lockArray[index] ? '<img class="h-6 w-6 mt-2" src="images/lock-closed.svg" alt="Locked">' : '<img class="h-6 w-6 mt-2" src="images/lock-open.svg" alt="Unlocked">'}</div>
                 </div>
 
