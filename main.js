@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
 
             `;
-            colorDiv.classList.add('color', 'w-full', 'flex', 'py-80','h-100', 'text-lg', 'justify-center', 'font-semibold');
+            colorDiv.classList.add('color', 'w-full', 'flex', 'h-full', 'text-lg', 'justify-center', 'items-center', 'font-semibold');
         
             const copyIcon = colorDiv.querySelector('.copy-icon');
             copyIcon.addEventListener('click', (event) => {
